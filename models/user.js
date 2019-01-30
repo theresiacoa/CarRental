@@ -1,14 +1,62 @@
 'use strict';
+// const hash = require('../helpers/bcrypt');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    firstName: DataTypes.STRING,
+    firstName: {
+      type: DataTypes.STRING,
+    },
     lastName: DataTypes.STRING,
-    password: DataTypes.STRING,
-    email: DataTypes.STRING
-  }, {});
-  User.associate = function(models) {
+    password: {
+      type: DataTypes.STRING,
+    },
+    email: {
+      type: DataTypes.STRING,
+      validate: {
+        isEmail: {
+          msg: `Email format is incorrect`
+        },
+        isUnique: function (value, next) {
+          User.findOne({
+            where: {
+              email: value,
+              id: { [Op.ne]: this.id }
+            }
+          })
+            .then(data => {
+              if (data) {
+                next(`email already in use`)
+              } else {
+                next()
+              }
+            })
+            .catch(err => {
+              next(err)
+            })
+        }
+      }
+    }
+  }, {
+      // hooks: {
+      //   beforeCreate: (user) => {
+      //     return new Promise((resolve, reject) => {
+      //       hash(user.dataValues.password)
+      //         .then((data) => {
+      //           user.dataValues.password = data;
+      //           resolve()
+      //         })
+      //         .catch((err) => {
+      //           reject(err);
+      //         })
+      //     })
+      //   }
+      // }
+    });
+  User.associate = function (models) {
     // associations can be defined here
-    User.belongsToMany(models.Car, {through: 'Transaction'})
+    User.belongsToMany(models.Car, { through: 'Transaction' })
   };
   return User;
 };
