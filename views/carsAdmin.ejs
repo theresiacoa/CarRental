@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('./partials/styles.ejs') %>
+    <%- include("./partials/navbar_afterLogin.ejs") %>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Cars</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <script src="main.js"></script>
+</head>
+<h1 align ='center'>Car List</h1>
+<h3 align ='center'><a href="/cars/admin/add">Add New Car</a></h3>
+<body>
+  <table>
+    <tr>
+      <th align="center">Brand</th>
+      <th align="center">Type</th>
+      <th align="center">Color</th>
+      <th align="center">Year</th>
+      <th align="center">Price</th>
+      <th align="center">Action</th>
+    </tr>
+    <% data.forEach((car) => { %>
+    <tr>      
+      <td><%= car.brand %></td>
+      <td><%= car.type %></td>
+      <td><%= car.color %></td>
+      <td><%= car.year %></td>
+      <td>Rp. <%= car.rentalPrice %></td>
+      <td align="center" >
+          <a href="admin/edit/<%=car.id%>">Edit</a> ||
+          <a href="admin/delete/<%=car.id%>" onclick="return confirm('Anda yakin ingin menghapus data ini?')">Delete</a>
+      </td>
+    </tr>
+    <% }) %>
+  </table>
+  <%- include('./partials/footer.ejs') %>
+</body>
+</html>
