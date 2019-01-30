@@ -77,6 +77,16 @@ router.get('/admin/delete/:id', middleware('admin'), (req, res) => {
 })
 
 
+router.get('/users/rent/:id', (req, res) => {
+  Car.findByPk(req.params.id)
+    .then(car => {
+      res.render('rentCar', { data: car })
+    })
+    .catch(err => {
+      res.send(err)
+    })
+})
+
 
 
 module.exports = router;
