@@ -36,4 +36,10 @@ router.post('/admin/add', (req, res) => {
     })
 })
 
+router.get('/rent', (req,res) => {
+  
+})
+
+
+
 module.exports = router;
