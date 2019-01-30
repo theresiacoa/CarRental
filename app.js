@@ -14,11 +14,20 @@ app.set('views', './views');
 
 
 app.get('/', (req, res) => {
-  res.render(`navbarPages/home.ejs`);
+  if (!req.session.userLoggedIn) {
+    res.render(`navbarPages/home.ejs`, {navbar: 'before'});
+  } else {
+    res.render(`navbarPages/home.ejs`, {navbar: 'after'});
+  }
+  
 })
 
 app.use('/user', userRoutes)
 app.use('/cars', carRoutes)
+
+app.get('/session', (req, res) => {
+  res.send(req.session);
+})
 
 app.listen(3000, () => {
   console.log(`listening to PORT ---- 3000`);

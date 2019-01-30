@@ -6,7 +6,12 @@
 </head>
 <%- include('../partials/styles.ejs') %>
 <body>
-  <%- include("../partials/navbar_beforeLogin.ejs") %>
+  <% if (navbar === 'before') { %>
+    <%- include("../partials/navbar_beforeLogin.ejs") %>
+    <% } else { %>
+    <%- include("../partials/navbar_afterLogin.ejs") %>
+    <%}%>
+  
   <header>
     <h2> CarRental</h2>
   </header>
