@@ -1,10 +1,12 @@
 const router = require('express').Router();
 const Car = require('../models').Car
+const middleware = require('../helpers/middleware');
+
+//ADMIN
 
 router.get('/', (req, res) => {
   Car.findAll({})
     .then(cars => {
-      // res.send(cars)
       res.render('cars', { data: cars })
     })
     .catch(err => {
@@ -12,10 +14,9 @@ router.get('/', (req, res) => {
     })
 })
 
-router.get('/admin', (req, res) => {
+router.get('/admin', middleware('admin'), (req, res) => {
   Car.findAll({})
     .then(cars => {
-      // res.send(cars)
       res.render('carsAdmin', { data: cars })
     })
     .catch(err => {
@@ -23,11 +24,11 @@ router.get('/admin', (req, res) => {
     })
 })
 
-router.get('/admin/add', (req, res) => {
+router.get('/admin/add', middleware('admin'), (req, res) => {
   res.render('addCar')
 })
 
-router.post('/admin/add', (req, res) => {
+router.post('/admin/add', middleware('admin'), (req, res) => {
   let newCar = {
     brand: req.body.brand,
     type: req.body.type,
@@ -45,7 +46,7 @@ router.post('/admin/add', (req, res) => {
     })
 })
 
-router.get('/admin/edit/:id', (req, res) => {
+router.get('/admin/edit/:id', middleware('admin'), (req, res) => {
   Car.findByPk(req.params.id)
     .then(car => {
       res.render('editCar', { data: car })
@@ -55,7 +56,7 @@ router.get('/admin/edit/:id', (req, res) => {
     })
 })
 
-router.post('/admin/edit/:id', (req, res) => {
+router.post('/admin/edit/:id', middleware('admin'), (req, res) => {
   Car.update(req.body, { where: { id: req.params.id } })
     .then(() => {
       res.redirect('/cars/admin')
@@ -65,7 +66,7 @@ router.post('/admin/edit/:id', (req, res) => {
     })
 })
 
-router.get('/admin/delete/:id', (req, res) => {
+router.get('/admin/delete/:id', middleware('admin'), (req, res) => {
   Car.destroy({ where: { id: req.params.id } })
     .then(() => {
       res.redirect('/cars/admin')
@@ -75,10 +76,6 @@ router.get('/admin/delete/:id', (req, res) => {
     })
 })
 
-
-router.get('/rent', (req, res) => {
-
-})
 
 
 
