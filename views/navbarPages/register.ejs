@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title><%=purpose%></title>
+</head>
+<%- include('../partials/styles.ejs') %>
+<body>
+  <%- include("../partials/navbar_beforeLogin.ejs") %>
+    <div class="form-style-8">
+        <h2><%= purpose%></h2>
+        <form action="/user/<%= purpose%>" method="POST">
+          <% if (purpose === 'register') { %>
+          First Name:<br>
+            <input type="text" name="firstName">
+            <br><br>
+
+            Last Name:<br>
+            <input type="text" name="lastName">
+            <br><br>
+            <% } %>
+
+            Email:<br>
+            <input type="text" name="email">
+            <br><br>
+
+            Password:<br>
+            <input type="password" name="password">
+            <br><br>
+
+            <input type="submit" value="Submit">
+           
+        </form>
+      </div>
+      <% if (purpose === 'register') { %>
+        <p>have account? <a href="/user/login">Login</a></p>
+        <% } %>
+    
+  </form>
+
+  
+</body>
+</html>
