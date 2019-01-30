@@ -2,11 +2,21 @@ const router = require('express').Router();
 const Car = require('../models').Car
 
 router.get('/', (req, res) => {
-  // res.send('car');
   Car.findAll({})
     .then(cars => {
-      res.send(cars)
-      console.log(cars,'ini carrrrrr')
+      // res.send(cars)
+      res.render('cars', { data: cars })
+    })
+    .catch(err => {
+      res.send(err)
+    })
+})
+
+router.get('/admin', (req, res) => {
+  Car.findAll({})
+    .then(cars => {
+      // res.send(cars)
+      res.render('carsAdmin', { data: cars })
     })
     .catch(err => {
       res.send(err)
@@ -14,7 +24,6 @@ router.get('/', (req, res) => {
 })
 
 router.get('/admin/add', (req, res) => {
-  // res.send('masuk')
   res.render('addCar')
 })
 
@@ -29,15 +38,46 @@ router.post('/admin/add', (req, res) => {
 
   Car.create(newCar)
     .then(car => {
-      res.send(car)
+      res.redirect('/cars/admin')
     })
     .catch(err => {
       res.send(err)
     })
 })
 
-router.get('/rent', (req,res) => {
-  
+router.get('/admin/edit/:id', (req, res) => {
+  Car.findByPk(req.params.id)
+    .then(car => {
+      res.render('editCar', { data: car })
+    })
+    .catch(err => {
+      res.send(err)
+    })
+})
+
+router.post('/admin/edit/:id', (req, res) => {
+  Car.update(req.body, { where: { id: req.params.id } })
+    .then(() => {
+      res.redirect('/cars/admin')
+    })
+    .catch(err => {
+      res.send(err)
+    })
+})
+
+router.get('/admin/delete/:id', (req, res) => {
+  Car.destroy({ where: { id: req.params.id } })
+    .then(() => {
+      res.redirect('/cars/admin')
+    })
+    .catch(err => {
+      res.send(err)
+    })
+})
+
+
+router.get('/rent', (req, res) => {
+
 })
 
 
