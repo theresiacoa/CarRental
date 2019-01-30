@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <%- include('./partials/styles.ejs') %>
+    <meta charset="utf-8">
+    <title>Add New Car</title>
+  </head>
+  <body>
+    <center>
+      <h1>Add New Car</h1>
+      
+      <form method="POST" action="/cars/admin/add">
+        Brand:<br>
+        <input type="text" name="brand">
+        <br>
+        Type:<br>
+        <input type="text" name="type">
+        <br>
+        Color:<br>
+        <input type="text" name="color">
+        <br>
+        Year:<br>
+        <input type="text" name="year">
+        <br>
+        Price:<br>
+        <input type="text" name="rentalPrice">
+        <br><br>
+        <input type="submit" value="Submit">
+      </form>
+    </center>
+    <%- include('./partials/footer.ejs') %>
+  </body>
+</html>
