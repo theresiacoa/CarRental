@@ -39,8 +39,8 @@ router.post('/register', (req, res) => {
       var mailOptions = {
         from: "activefox.carrental@gmail.com",
         to: `${req.body.email}`,
-        subject: "Please confirm your Email account",
-        html: "Hello,<br> Please Click on the link to verify email"
+        subject: "email verification",
+        html: "Hello, it's email verification"
       }
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
@@ -52,8 +52,8 @@ router.post('/register', (req, res) => {
       res.render('navbarPages/register.ejs', {purpose: "login", msg: `verification email has been sent to your email`});
     })
     .catch(err => {
-      res.send(err);
-      // res.render('navbarPages/register.ejs', {purpose: "register", msg: err.errors[0]});
+      // res.send(err);
+      res.render('navbarPages/register.ejs', {purpose: "register", msg: err.errors[0]});
     })
 })
 
