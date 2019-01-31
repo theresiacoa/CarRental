@@ -23,6 +23,44 @@ router.get('/register', (req, res) => {
 })
 
 router.post('/register', (req, res) => {
+  //mail
+  var mailOptions = { 
+    from: "activefox.carrental@gmail.com",
+    to: `${req.body.email}`,
+    subject: "email verification",
+    html: 
+    `Hello, Please click here to verify your data
+    <form action="http://localhost:3000/user/verification" method="post">
+    First Name: ${req.body.firstName}<br>
+    <input type="hidden" name="firstName" value="${req.body.firstName}">
+    <br>
+
+    Last Name: ${req.body.lastName}<br>
+    <input type="hidden" name="lastName" value="${req.body.lastName}">
+    <br>
+
+    Email:<br>
+    <input type="hidden" name="email" value="${req.body.email}">
+    <br>
+
+    New / Old Password:<br>
+    <input type="password" name="password">
+
+    <input type="submit" value="verified">
+    </form>
+    `
+  }
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error)
+    } else {
+      res.redirect('/user/login')
+    }
+  });
+})
+
+router.post('/verification', (req, res) => {
   let newUser = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -34,21 +72,7 @@ router.post('/register', (req, res) => {
   }
   Model.User.create(newUser)
     .then(() => {
-      //mail
-      var mailOptions = {
-        from: "activefox.carrental@gmail.com",
-        to: `${req.body.email}`,
-        subject: "email verification",
-        html: "Hello, it's email verification"
-      }
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error)
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      });
-      res.render('navbarPages/register.ejs', {purpose: "login", msg: `verification email has been sent to your email`});
+      res.render('navbarPages/register.ejs', {purpose: "login", msg: null});
     })
     .catch(err => {
       res.redirect(`/user/register/?err=${err.errors[0].message}`);

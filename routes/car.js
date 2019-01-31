@@ -4,7 +4,6 @@ const middleware = require('../helpers/middleware');
 const total = require('../helpers/totalPrice')
 
 //ADMIN
-
 router.get('/', (req, res) => {
   Car.findAll({})
     .then(cars => {

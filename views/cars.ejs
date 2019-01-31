@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <%- include('./partials/styles.ejs') %>
     <% if (navbar === 'before') { %>
       <%- include("./partials/navbar_beforeLogin.ejs") %>
       <% } else { %>
@@ -14,6 +13,7 @@
   <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
   <script src="main.js"></script>
 </head>
+<%- include('./partials/styles.ejs') %>
 <h1 align ='center'>Car List</h1>
 <body>
   <table>

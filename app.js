@@ -1,3 +1,4 @@
+require('dotenv').config();
 
 const express = require('express');
 const app = express();
@@ -5,8 +6,6 @@ const carRoutes = require('./routes/car')
 const userRoutes = require('./routes/user');
 const transactionRoutes = require('./routes/transaction')
 const session = require('express-session')
-
-require('dotenv').config();
 
 app.use(session({
   secret: "carRental"

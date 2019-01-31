@@ -52,6 +52,20 @@ module.exports = (sequelize, DataTypes) => {
                 reject(err);
               })
           })
+        },
+        beforeBulkCreate: (users) => {
+          return new Promise((resolve, reject) => {
+            return users.forEach(function (user) {
+              hash(user.dataValues.password)
+              .then((data) => {
+                user.dataValues.password = data;
+                resolve()
+              })
+              .catch((err) => {
+                reject(err);
+              })
+            })
+          })
         }
       }
     });
