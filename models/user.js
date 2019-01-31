@@ -37,7 +37,8 @@ module.exports = (sequelize, DataTypes) => {
             })
         }
       }
-    }
+    },
+    status: DataTypes.STRING  
   }, {
       hooks: {
         beforeCreate: (user) => {
