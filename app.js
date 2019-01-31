@@ -32,6 +32,6 @@ app.get('/session', (req, res) => {
   res.send(req.session);
 })
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || '3000', () => {
   console.log(`listening to PORT ---- 3000`);
 })
