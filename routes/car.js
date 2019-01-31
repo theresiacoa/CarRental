@@ -7,7 +7,11 @@ const middleware = require('../helpers/middleware');
 router.get('/', (req, res) => {
   Car.findAll({})
     .then(cars => {
-      res.render('cars', { data: cars })
+      if (!req.session.userLoggedIn) {
+        res.render('cars', { data: cars, navbar: `before`})
+      } else {
+        res.render('cars', { data: cars, navbar: `after`})
+      }
     })
     .catch(err => {
       res.send(err)
@@ -76,8 +80,7 @@ router.get('/admin/delete/:id', middleware('admin'), (req, res) => {
     })
 })
 
-
-router.get('/users/rent/:id', (req, res) => {
+router.get('/users/rent/:id', middleware('user'),(req, res) => {
   Car.findByPk(req.params.id)
     .then(car => {
       res.render('rentCar', { data: car })

@@ -2,7 +2,11 @@
 <html>
 <head>
     <%- include('./partials/styles.ejs') %>
-    <%- include("./partials/navbar_afterLogin.ejs") %>
+    <% if (navbar === 'before') { %>
+      <%- include("./partials/navbar_beforeLogin.ejs") %>
+      <% } else { %>
+      <%- include("./partials/navbar_afterLogin.ejs") %>
+      <%}%>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Cars</title>

@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 //REGISTRATION
 router.get('/register', (req, res) => {
   res.render('navbarPages/register.ejs', {
-    purpose: 'register', msg: null
+    purpose: 'register', msg: req.query.err
   })
 })
 
@@ -32,7 +32,6 @@ router.post('/register', (req, res) => {
     createdAt: new Date(),
     updatedAt: new Date()
   }
-  // console.log(newUser);
   Model.User.create(newUser)
     .then(() => {
       //mail
@@ -52,8 +51,7 @@ router.post('/register', (req, res) => {
       res.render('navbarPages/register.ejs', {purpose: "login", msg: `verification email has been sent to your email`});
     })
     .catch(err => {
-      // res.send(err);
-      res.render('navbarPages/register.ejs', {purpose: "register", msg: err.errors[0]});
+      res.redirect(`/user/register/?err=${err.errors[0].message}`);
     })
 })
 
