@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
     })
 })
 
-router.get('/admin', middleware('admin'), (req, res) => {
+router.get('/admin', middleware("admin"), (req, res) => {
   Car.findAll({})
     .then(cars => {
       res.render('carsAdmin', { data: cars })
