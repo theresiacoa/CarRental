@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Car = require('../models').Car
 const middleware = require('../helpers/middleware');
+const total = require('../helpers/totalPrice')
 
 //ADMIN
 
@@ -87,6 +88,19 @@ router.get('/users/rent/:id', (req, res) => {
     })
 })
 
+router.post('/users/rent/:id', (req, res) => {
+  
+  res.send(req.body)
+  // Car.update(req.body, { where: { id: req.params.id } })
+  // .then(() => {
+  //   // res.redirect('/subjects')
+  //   })
+  //   .catch(err => {
+  //     res.send(err)
+    // })
+})
+
 
 
 module.exports = router;
+
