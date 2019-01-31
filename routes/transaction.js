@@ -1,5 +1,8 @@
 const router = require('express').Router();
 const middleware = require('../helpers/middleware')
+const User = require('../models').User
+const Car = require('../models').Car
+const Transaction = require('../models').Transaction
 
 //GOOGLE API KEY
 const googleMapsClient = require('@google/maps').createClient({
@@ -7,10 +10,20 @@ const googleMapsClient = require('@google/maps').createClient({
   Promise: Promise
 });
 
+
 //location
 router.get('/', middleware(), (req, res) => {
   if (req.session.userLoggedIn.status === 'user') {
-    res.render('booking_user.ejs')
+    User.findByPk(req.session.userLoggedIn.id, {
+      include: [{ model: Car }]
+    })
+    .then(rent => {
+      res.render('booking_user.ejs', { data: rent.Cars })
+      // res.send(rent)
+    })
+    .catch(err => {
+      res.send(err)
+    })
   } else {
     res.render('booking_admin.ejs')
   }

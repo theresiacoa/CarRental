@@ -30,6 +30,8 @@ router.get('/users/rent/:id', middleware('user'), (req, res) => {
     })
 })
 
+router.get('/user')
+
 router.post('/users/rent/:id', middleware('user'), (req, res) => {
 // router.post('/users/rent/:id', (req, res) => {
   let transaction = {
@@ -41,19 +43,15 @@ router.post('/users/rent/:id', middleware('user'), (req, res) => {
     address: req.body.address
   }
 
-  // res.send(transaction)
-
   Transaction.create(transaction)
     .then(rent => {
-      // res.redirect('/user/booking')
-      res.send('transaksi berhasil')
+      res.redirect('/booking')
+      // res.send('transaksi berhasil')
     })
     .catch(err => {
       res.send(err)
     })
 })
-
-
 
 router.get('/admin', middleware("admin"), (req, res) => {
   Car.findAll({})
