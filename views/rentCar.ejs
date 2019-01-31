@@ -9,28 +9,36 @@
 
 <body>
   <center>
-    <h1>Rent Confirmation</h1>
+    <h1>Rent Form</h1>
 
     <form method="POST" action="/cars/admin/edit/<%=data.id%>">
-      Brand:
-      <%= data.brand %><br>
+      <table  border="1"> 
+        <tr>
+          <th>Brand:</th>
+          <td><%= data.brand %></td>
+        </tr>
+        <tr>
+          <th>Type:</th>
+          <td><%= data.type %></td>
+        </tr>
+        <tr>
+          <th>Color:</th>
+          <td><%= data.color %></td>
+        </tr>
+        <tr>
+          <th>Year:</th>
+          <td><%= data.year %></td>
+        </tr>
+        <tr>
+          <th>Price:</th>
+          <td>Rp. <%= data.rentalPrice %>,-</td>
+        </tr>
+      </table>
       <br>
-      Type:
-      <%= data.type %><br>
-      <br>
-      Color:
-      <%= data.color %><br>
-      <br>
-      Year:
-      <%= data.year %><br>
-      <br>
-      Price:
-      <%= data.rentalPrice %><br>
-      <br>
-      Date: <br>
+      Date: 
       <input type="date" name="date">
       <br><br>
-      Rent range: <br>
+      Rent range:
       <select>
         <option value=1>1 day</option>
         <option value=2>2 days</option>
@@ -39,11 +47,8 @@
         <option value=5>5 days</option>
       </select>
       <br><br>
-      Total Price: <br>
-      <input type="text" name="rentalPrice">
-      <br><br>
       Address: <br>
-      <textarea rows="5" cols="50" name="address">Enter address here...</textarea>
+      <textarea rows="3" cols="40" name="address">Enter address here...</textarea>
       <br><br>
       <input type="submit" value="Submit">
     </form>
