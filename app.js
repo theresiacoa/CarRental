@@ -1,7 +1,10 @@
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
 const carRoutes = require('./routes/car')
 const userRoutes = require('./routes/user');
+const transactionRoutes = require('./routes/transaction')
 const session = require('express-session')
 
 app.use(session({
@@ -19,11 +22,11 @@ app.get('/', (req, res) => {
   } else {
     res.render(`navbarPages/home.ejs`, {navbar: 'after'});
   }
-  
 })
 
 app.use('/user', userRoutes)
 app.use('/cars', carRoutes)
+app.use('/booking', transactionRoutes)
 
 app.get('/session', (req, res) => {
   res.send(req.session);

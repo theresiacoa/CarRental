@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    status: DataTypes.STRING  
+    status: DataTypes.STRING
   }, {
       hooks: {
         beforeCreate: (user) => {
@@ -51,6 +51,20 @@ module.exports = (sequelize, DataTypes) => {
               .catch((err) => {
                 reject(err);
               })
+          })
+        },
+        beforeBulkCreate: (users) => {
+          return new Promise((resolve, reject) => {
+            return users.forEach(function (user) {
+              hash(user.dataValues.password)
+              .then((data) => {
+                user.dataValues.password = data;
+                resolve()
+              })
+              .catch((err) => {
+                reject(err);
+              })
+            })
           })
         }
       }

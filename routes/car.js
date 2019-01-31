@@ -6,11 +6,14 @@ const total = require('../helpers/totalPrice')
 
 
 //ADMIN
-
 router.get('/', (req, res) => {
   Car.findAll({})
     .then(cars => {
-      res.render('cars', { data: cars })
+      if (!req.session.userLoggedIn) {
+        res.render('cars', { data: cars, navbar: `before`})
+      } else {
+        res.render('cars', { data: cars, navbar: `after`})
+      }
     })
     .catch(err => {
       res.send(err)
@@ -52,7 +55,7 @@ router.post('/users/rent/:id', middleware('user'), (req, res) => {
 
 
 
-router.get('/admin', middleware('admin'), (req, res) => {
+router.get('/admin', middleware("admin"), (req, res) => {
   Car.findAll({})
     .then(cars => {
       res.render('carsAdmin', { data: cars })
@@ -113,7 +116,6 @@ router.get('/admin/delete/:id', middleware('admin'), (req, res) => {
       res.send(err)
     })
 })
-
 
 module.exports = router;
 

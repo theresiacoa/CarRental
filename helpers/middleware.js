@@ -1,10 +1,16 @@
 
-function middleware(status) {
+function middleware(status = null) {
   return (req, res, next) => {
-    if (req.session.userLoggedIn.status = status) {
-      next()
+    if (!req.session.userLoggedIn) {
+      res.redirect('/user/login');
     } else {
-      res.redirect('/user/register');
+      if (req.session.userLoggedIn) {
+        next();
+      } else if (status && req.session.userLoggedIn.status === status) {
+        next();
+      } else {
+        res.redirect('/user/login');
+      }
     }
   }
 }
