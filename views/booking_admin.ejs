@@ -10,13 +10,14 @@
 <body>
     <%- include("./partials/navbar_afterLogin.ejs") %>
     <h1>Rental Details</h1>
-    <form action="/booking/location/map" method="get">
+    <form action="/booking/location/maps" method="get">
       <button class="button">Customer's Location</button>
     </form>
 
     <table>
       <tr>
         <th>Description</th>
+        <th>Address</th>
         <th>Rental Date</th>
         <th>Total Price</th>
         <th>Status</th>
@@ -35,9 +36,17 @@
                 Year: <%= c.year %><br>
                 Price: Rp.<%= c.rentalPrice %> / day<br>
               </td>
+              <td><%= c.address %></td>
               <td><%= c.rentalDate %></td>
               <td><%= c.totalPrice %></td>
-              <td><%= c.status %></td>
+              <td><%= c.status %><br>
+                <form action="/booking/<%= c.id %>/updateStatus" method="POST">
+                  <% if (c.status === 'unpaid') { %>
+                    <input type="submit" value="Payment Done">
+                    <% } %>
+                </form>
+              </td>
+              
 
         </tr>
         
