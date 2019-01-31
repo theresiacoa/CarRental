@@ -11,7 +11,7 @@
   <center>
     <h1>Rent Form</h1>
 
-    <form method="POST" action="/cars/admin/edit/<%=data.id%>">
+    <form method="POST" action="/cars/users/rent/<%=data.id%>">
       <table  border="1"> 
         <tr>
           <th>Brand:</th>
@@ -39,7 +39,7 @@
       <input type="date" name="date">
       <br><br>
       Rent range:
-      <select>
+      <select name="day">
         <option value=1>1 day</option>
         <option value=2>2 days</option>
         <option value=3>3 days</option>
@@ -50,6 +50,7 @@
       Address: <br>
       <textarea rows="3" cols="40" name="address">Enter address here...</textarea>
       <br><br>
+      <input type="hidden" name="price" value="<%= data.rentalPrice %>">
       <input type="submit" value="Submit">
     </form>
   </center>
