@@ -58,7 +58,7 @@ router.post('/register', (req, res) => {
 //LOGIN
 router.get('/login', (req, res) => {
   res.render('navbarPages/register.ejs', {
-    purpose: 'login', msg:null
+    purpose: 'login', msg:req.query.err
   })
 })
 
@@ -69,7 +69,7 @@ router.post('/login', (req, res) => {
   })
   .then((data) => {
     if (!data) {
-      throw `You need to register first`
+      throw `username / password wrong`
     } else {
       userData = data;
       return new Promise((resolve, reject) => {
@@ -94,7 +94,7 @@ router.post('/login', (req, res) => {
     }
   })
   .catch(err => {
-    res.send(err);
+    res.redirect(`/user/login/?err=${err}`);
   })
 })
 
