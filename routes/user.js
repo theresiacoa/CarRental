@@ -1,16 +1,15 @@
 const router = require('express').Router();
 const Model = require('../models');
 const nodemailer = require("nodemailer");
-
-//SMTP
-// var transporter = nodemailer.createTransport({
-//   service: "Gmail",
-//   auth: {
-//     user: "	activefox.carrental@gmail.com",
-//     pass: "carrental123"
-//   }
-// });
-// var rand, mailOptions, host, link;
+const bcrypt = require('bcrypt');
+//SMTP FOR EMAIL -------------------------------
+var transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: "activefox.carrental@gmail.com",
+    pass: "carrental123"
+  }
+});
 
 router.get('/', (req, res) => {
   res.redirect('/user/register');
@@ -19,34 +18,105 @@ router.get('/', (req, res) => {
 //REGISTRATION
 router.get('/register', (req, res) => {
   res.render('navbarPages/register.ejs', {
-    purpose: 'register', err: null
+    purpose: 'register', msg: null
   })
 })
 
 router.post('/register', (req, res) => {
-  // res.send(req.body);
   let newUser = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    password: req.body.password,
     email: req.body.email,
+    password: req.body.password,
+    status: 'user',
     createdAt: new Date(),
     updatedAt: new Date()
   }
-  // res.send(newUser);
+  // console.log(newUser);
   Model.User.create(newUser)
-    .then((data) => {
-  //     res.redirect('/login')
+    .then(() => {
+      //mail
+      var mailOptions = {
+        from: "activefox.carrental@gmail.com",
+        to: `${req.body.email}`,
+        subject: "email verification",
+        html: "Hello, it's email verification"
+      }
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error)
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+      res.render('navbarPages/register.ejs', {purpose: "login", msg: `verification email has been sent to your email`});
     })
     .catch(err => {
-  //     // res.render('navbarPages/register.ejs', {
-  //     //   purpose: 'login', err: err
-  //     // })
-  //     console.log(err)
-      res.send(err);
+      // res.send(err);
+      res.render('navbarPages/register.ejs', {purpose: "register", msg: err.errors[0]});
     })
 })
 
+//LOGIN
+router.get('/login', (req, res) => {
+  res.render('navbarPages/register.ejs', {
+    purpose: 'login', msg:null
+  })
+})
+
+router.post('/login', (req, res) => {
+  let userData = {};
+  Model.User.findOne({
+    where: { email: req.body.email }
+  })
+  .then((data) => {
+    if (!data) {
+      throw `You need to register first`
+    } else {
+      userData = data;
+      return new Promise((resolve, reject) => {
+        bcrypt.compare(req.body.password, data.password)
+          .then(function (res) {
+            res ? resolve(true) :
+            resolve(false)
+          });
+      })
+    }
+  })
+  .then((value) => {
+    if (value) {
+      req.session.userLoggedIn = {
+        username: userData.firstName,
+        id: userData.id,
+        status: userData.status
+      }
+      res.redirect('/')
+    } else {
+      throw `username / password wrong`
+    }
+  })
+  .catch(err => {
+    res.send(err);
+  })
+})
+
+//LOGOUT
+router.get('/logout', (req, res) => {
+  req.session.destroy(function(err) {
+    if (err) {
+      res.send(err)
+    } else {
+      res.redirect('/');
+    }
+  })
+  
+})
+
+module.exports = router;
+
+
+
+// EMAIL ---------------------------------------
 // router.get('/send', function (req, res) {
 //   rand = Math.floor((Math.random() * 100) + 54);
 //   host = req.get('host');
@@ -67,15 +137,3 @@ router.post('/register', (req, res) => {
 //     }
 //   });
 // });
-
-//LOGIN
-router.get('/login', (req, res) => {
-  res.render('navbarPages/register.ejs', {
-    purpose: 'login'
-  })
-})
-
-router.post('/login', (req, res) => {
-
-})
-module.exports = router;

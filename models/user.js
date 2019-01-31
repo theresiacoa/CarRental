@@ -1,5 +1,5 @@
 'use strict';
-// const hash = require('../helpers/bcrypt');
+const hash = require('../helpers/bcrypt');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
@@ -39,20 +39,20 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {
-      // hooks: {
-      //   beforeCreate: (user) => {
-      //     return new Promise((resolve, reject) => {
-      //       hash(user.dataValues.password)
-      //         .then((data) => {
-      //           user.dataValues.password = data;
-      //           resolve()
-      //         })
-      //         .catch((err) => {
-      //           reject(err);
-      //         })
-      //     })
-      //   }
-      // }
+      hooks: {
+        beforeCreate: (user) => {
+          return new Promise((resolve, reject) => {
+            hash(user.dataValues.password)
+              .then((data) => {
+                user.dataValues.password = data;
+                resolve()
+              })
+              .catch((err) => {
+                reject(err);
+              })
+          })
+        }
+      }
     });
   User.associate = function (models) {
     // associations can be defined here
