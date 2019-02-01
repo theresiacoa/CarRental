@@ -7,6 +7,6 @@
     "dialect": "postgres"
   },
   "production": {
-    "use_env_variable": "postgresql-cubed-18333"
+    "use_env_variable": "postgresql-trapezoidal-44836"
   }
 }

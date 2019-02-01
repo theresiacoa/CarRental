@@ -1,7 +1,9 @@
 const router = require('express').Router();
+const Car = require('../models').Car
 const Transaction = require('../models').Transaction
 const middleware = require('../helpers/middleware');
 const total = require('../helpers/totalPrice')
+
 
 //ADMIN
 router.get('/', (req, res) => {
