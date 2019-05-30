@@ -43,7 +43,7 @@ router.post('/register', (req, res) => {
     <input type="hidden" name="email" value="${req.body.email}">
     <br>
 
-    New / Old Password:<br>
+    New Password:<br>
     <input type="password" name="password">
 
     <input type="submit" value="verified">

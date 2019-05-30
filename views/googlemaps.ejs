@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    #map {
+      height: 100%;
+    }
+
+    html,
+    body {
+      height: 90%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<%- include('./partials/styles.ejs') %>
+
+  <body>
+    <%- include("./partials/navbar_afterLogin.ejs") %>
+      <h3>User's location</h3>
+      <div id="map"></div>
+      <script>
+        var map;
+        function initMap() {
+          //Map Options + location
+          var locations = <%- locations %>;
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: new google.maps.LatLng(-6.21462, 106.84513), //jakarta coords
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          });
+          var geocoder = new google.maps.Geocoder();
+
+          //marker
+          for (let i = 0; i < locations.length; i++) {
+            geocoder.geocode({ 'address': locations[i].address }, function (results, status) {
+              if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                  position: results[0].geometry.location,
+                  map: map
+                });
+
+                var infowindow = new google.maps.InfoWindow();
+
+                google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                  return function () {
+                    infowindow.setContent(locations[i].username);
+                    infowindow.open(map, marker);
+                  }
+                })(marker, i));
+              } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+              }
+            });
+          }
+        }
+      </script>
+      <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%=api%>&callback=initMap">
+      </script>
+  </body>
+</html>

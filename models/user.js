@@ -74,5 +74,9 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsToMany(models.Car, { through: 'Transaction' })
     User.hasMany(models.Transaction)
   };
+
+  User.prototype.getFullName = function () {
+    return this.firstName + ' ' + this.lastName
+  }
   return User;
 };

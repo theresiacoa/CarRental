@@ -5,5 +5,8 @@
     "database": "carRent",
     "host": "127.0.0.1",
     "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "postgresql-trapezoidal-44836"
   }
 }

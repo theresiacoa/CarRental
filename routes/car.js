@@ -12,7 +12,11 @@ router.get('/', (req, res) => {
       if (!req.session.userLoggedIn) {
         res.render('cars', { data: cars, navbar: `before`})
       } else {
-        res.render('cars', { data: cars, navbar: `after`})
+        if (req.session.userLoggedIn.status === 'user') {
+          res.render('cars', { data: cars, navbar: `after`})
+        } else {
+          res.render('carsAdmin', { data: cars, navbar: `after`})
+        }
       }
     })
     .catch(err => {

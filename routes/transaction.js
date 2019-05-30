@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const Model = require('../models');
 const middleware = require('../helpers/middleware')
 const User = require('../models').User
 const Car = require('../models').Car
@@ -10,74 +11,90 @@ const googleMapsClient = require('@google/maps').createClient({
   Promise: Promise
 });
 
-
 //location
 router.get('/', middleware(), (req, res) => {
   if (req.session.userLoggedIn.status === 'user') {
     User.findByPk(req.session.userLoggedIn.id, {
       include: [{ model: Car }]
     })
-    .then(rent => {
-      res.render('booking_user.ejs', { data: rent.Cars })
-      // res.send(rent)
-    })
-    .catch(err => {
-      res.send(err)
-    })
+      .then(rent => {
+        res.render('booking_user.ejs', { data: rent.Cars })
+        // res.send(rent)
+      })
+      .catch(err => {
+        res.send(err)
+      })
+
   } else {
-    res.render('booking_admin.ejs')
+    Model.User.findAll({ include: Model.Car })
+      .then(allData => {
+        let completedData = [];
+        for (let i = 0; i < allData.length; i++) {
+          if (!allData[i].Cars) {
+            break;
+          } else {
+            for (let j = 0; j < allData[i].Cars.length; j++) {
+              completedData.push({
+                id: allData[i].id,
+                fullName: allData[i].getFullName(),
+                email: allData[i].email,
+                brand: allData[i].Cars[j].brand,
+                type: allData[i].Cars[j].type,
+                color: allData[i].Cars[j].color,
+                year: allData[i].Cars[j].year,
+                rentalPrice: allData[i].Cars[j].rentalPrice,
+                rentalDate: allData[i].Cars[j].Transaction.rentalDate,
+                totalPrice: allData[i].Cars[j].Transaction.totalPrice,
+                status: allData[i].Cars[j].Transaction.status,
+                address: allData[i].Cars[j].Transaction.address
+              })
+            }
+          }
+        }
+        res.render('booking_admin.ejs', { data: completedData })
+      })
+      .catch(err => {
+        res.send(err);
+      })
   }
 })
 
-router.post('/location', middleware('admin'), (req, res) => {
-  googleMapsClient.geocode(
-    { address: '1600 Amphitheatre Parkway, Mountain View, CA' }
-  )
-    .asPromise()
-    .then((response) => {
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 3,
-        center: { lat: -28.024, lng: 140.887 }
+router.get('/location/maps', middleware('admin'), (req, res) => {
+  Transaction.findAll()
+    .then((data) => {
+      let allAddress = [];
+      data.forEach(e => {
+        allAddress.push({ address: e.address });
       });
-
-      var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      var markers = locations.map(function (location, i) {
-        return new google.maps.Marker({
-          position: location,
-          label: labels[i % labels.length]
-        });
-      });
-      var markerCluster = new MarkerClusterer(map, markers,
-        { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });
-      // console.log(response.json.results[0]);
-      // console.log(response.json.results[0].geometry.location.lat); or lng
+      res.render('googlemaps.ejs', { api: process.env.google_map_api, locations: JSON.stringify(allAddress) });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch(err => {
+      res.send(err);
+    })
+
 })
 
-router.get('/location/maps', (req, res) => {
-  Model.Transaction.findAll()
+router.post('/:id/updateStatus', (req, res) => {
+  Model.Transaction.findOne({
+    where: { UserId: req.params.id }
+  })
     .then((data) => {
-      var geocoder = new google.maps.Geocoder();
-      var address = "new york";
-
-      geocoder.geocode({ 'address': address }, function (results, status) {
-
-        if (status == google.maps.GeocoderStatus.OK) {
-          var latitude = results[0].geometry.location.lat();
-          var longitude = results[0].geometry.location.lng();
-          alert(latitude);
-        }
-      });
-      res.render('googlemaps.ejs', { key: process.env.google_map_api });
+      if (data) {
+        return Model.Transaction.update({ status: 'paid' }, {
+          where: {
+            UserId: req.params.id
+          }
+        })
+      } else {
+        throw `there's no user by that ID`
+      }
     })
-
-    .catch(err => {
-      res.send(err)
+    .then(() => {
+      res.redirect('/booking')
     })
-
+    .catch((err) => {
+      res.send(err);
+    })
 })
 
 
